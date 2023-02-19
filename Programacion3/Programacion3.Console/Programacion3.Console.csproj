@@ -6,10 +6,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.VisualStudio.GraphModel" Version="17.4.33103.184" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\Programacion3.Algoritmos\Programacion3.Algoritmos.csproj" />
     </ItemGroup>
 

@@ -1,6 +1,5 @@
-using System;
-using Microsoft.VisualStudio.GraphModel;
 using Programacion3.Algoritmos;
+using QuikGraph;
 using Xunit;
 
 namespace Programacion3.Tests
@@ -8,38 +7,36 @@ namespace Programacion3.Tests
     public class BreadthFirstSearchUnitTest
     {
         [Fact]
-        public void Test1()
+        public void BreadthFirstSearch()
         {
-            var graph = new Graph();
+            var graph = new UndirectedGraph<string, Edge<string>>();
 
-            var nodeA = graph.Nodes.GetOrCreate("A");
-            var nodeB = graph.Nodes.GetOrCreate("B");
-            var nodeC = graph.Nodes.GetOrCreate("C");
-            var nodeD = graph.Nodes.GetOrCreate("D");
-            var nodeE = graph.Nodes.GetOrCreate("E");
-            var nodeF = graph.Nodes.GetOrCreate("F");
-            var nodeG = graph.Nodes.GetOrCreate("G");
-            var nodeH = graph.Nodes.GetOrCreate("H");
-
-            graph.Links.GetOrCreate(nodeA, nodeB); // A -> B
-            graph.Links.GetOrCreate(nodeA, nodeC); // A -> C
-            graph.Links.GetOrCreate(nodeB, nodeD); // B -> D
-            graph.Links.GetOrCreate(nodeB, nodeE); // B -> E
-            graph.Links.GetOrCreate(nodeC, nodeE); // C -> E
-            graph.Links.GetOrCreate(nodeE, nodeF); // E -> F
-            graph.Links.GetOrCreate(nodeG, nodeH); // G -> H
-
-            var result = AlgoritmosBusqueda.BreadthFirstSearch(nodeA);
-
-            Assert.Contains(nodeA, result);
-            Assert.Contains(nodeB, result);
-            Assert.Contains(nodeC, result);
-            Assert.Contains(nodeD, result);
-            Assert.Contains(nodeE, result);
-            Assert.Contains(nodeF, result);
+            graph.AddVertexRange(new[] { "A", "B", "C", "D", "E", "F", "G", "H" });
             
-            Assert.DoesNotContain(nodeG, result);
-            Assert.DoesNotContain(nodeH, result);
+            graph.AddEdgeRange(new[]
+            {
+                new TaggedEdge<string, string>("A", "B", "A-B"),
+                new TaggedEdge<string, string>("A", "C", "A-C"),
+                new TaggedEdge<string, string>("B", "D", "B-D"),
+                new TaggedEdge<string, string>("B", "E", "B-E"),
+                new TaggedEdge<string, string>("C", "E", "C-E"),
+                new TaggedEdge<string, string>("E", "F", "E-F"),
+                new TaggedEdge<string, string>("G", "H", "G-H"),
+            });
+            
+            var nodosVisitados = AlgoritmosBusqueda.BreadthFirstSearch(graph, "A");
+            
+            Assert.Equal(6, nodosVisitados.Count);
+
+            Assert.Contains("A", nodosVisitados);
+            Assert.Contains("B", nodosVisitados);
+            Assert.Contains("C", nodosVisitados);
+            Assert.Contains("D", nodosVisitados);
+            Assert.Contains("E", nodosVisitados);
+            Assert.Contains("F", nodosVisitados);
+
+            Assert.DoesNotContain("G", nodosVisitados);
+            Assert.DoesNotContain("H", nodosVisitados);
         }
     }
 }
