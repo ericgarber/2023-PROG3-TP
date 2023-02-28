@@ -12,7 +12,7 @@ namespace Programacion3.Algoritmos
             // Creo un array para ir marcando los nodos visitados y lo inicializo con el nodo inicial
             // (para que no se agregue a la cola por segunda vez)
             var nodosVisitados = new[] { nodoInicial };
-            
+
             // Creo una cola con nodos a revisar y agrego al nodo inicial para que empiece por el 
             var cola = new Queue<string>();
             cola.Enqueue(nodoInicial);
@@ -22,16 +22,13 @@ namespace Programacion3.Algoritmos
             {
                 // Obtengo el primer item de la cola
                 var actual = cola.Dequeue();
-                
+
                 // Hago un loop por cada vecino del nodo actual
                 foreach (var vecino in grafo.AdjacentVertices(actual))
                 {
                     // Me fijo que no lo haya visitado anteriormente
                     if (!nodosVisitados.Contains(vecino))
                     {
-                        // Si querria saber si desde el nodeInicial se podria llegar a un nodoFinal
-                        // if (vecino == nodoFinal) return true;
-                        
                         // Marco como visitado el nodo para no volver a agregarlo a la cola
                         nodosVisitados = nodosVisitados.Append(vecino).ToArray();
 
@@ -40,16 +37,16 @@ namespace Programacion3.Algoritmos
                     }
                 }
             }
-            
+
             return nodosVisitados;
         }
-        
+
         public static string[] DepthFirstSearch(UndirectedGraph<string, Edge<string>> grafo, string nodoInicial)
         {
             // Creo un array para ir marcando los nodos visitados y lo inicializo con el nodo inicial
             // (para que no se agregue a la pila por segunda vez)
-            var nodosVisitados = new[] { nodoInicial };
-            
+            var nodosVisitados = new string[] {  };
+
             // Creo una pila con nodos a revisar y agrego al nodo inicial para que empiece por el 
             var pila = new Stack<string>();
             pila.Push(nodoInicial);
@@ -59,26 +56,29 @@ namespace Programacion3.Algoritmos
             {
                 // Obtengo el ultimo item agregado a la pila
                 var actual = pila.Pop();
+
+                if (nodosVisitados.Contains(actual))
+                    continue;
+
+                nodosVisitados = nodosVisitados.Append(actual).ToArray();
                 
                 // Hago un loop por cada vecino del nodo actual
-                foreach (var vecino in grafo.AdjacentVertices(actual))
+                foreach (var vecino in grafo.AdjacentVertices(actual).Reverse())
                 {
                     // Me fijo que no lo haya visitado anteriormente
-                    if (!nodosVisitados.Contains(vecino))
-                    {
-                        // Marco como visitado el nodo para no volver a agregarlo a la pila
-                        nodosVisitados = nodosVisitados.Append(vecino).ToArray();
-
-                        // Lo agrego a la pila para revisar a los vecinos de este nodo (los vecinos de este vecino)
-                        pila.Push(vecino);
-                    }
+                    if (nodosVisitados.Contains(vecino))
+                        continue;
+                    
+                    // Lo agrego a la pila para revisar a los vecinos de este nodo (los vecinos de este vecino)
+                    pila.Push(vecino);
                 }
             }
-            
+
             return nodosVisitados;
         }
-        
-        public static Dictionary<string, double> Dijkstra(UndirectedGraph<string, WeightedEdge<string>> grafo, string nodoInicial)
+
+        public static Dictionary<string, double> Dijkstra(UndirectedGraph<string, WeightedEdge<string>> grafo,
+            string nodoInicial)
         {
             var distancias = new Dictionary<string, double>();
             var visitados = new HashSet<string>();
@@ -90,11 +90,12 @@ namespace Programacion3.Algoritmos
                 distancias[nodo] = double.PositiveInfinity;
             }
 
-            // Agregar el nodo inicial con distancia 0
+            // Agrego el nodo inicial con distancia 0
             distancias[nodoInicial] = 0;
 
             while (visitados.Count < cantidadNodos - 1)
             {
+                // Busco el nodo con minima distancia que todavia no haya visitado
                 var actual = BuscarNodoConMinimaDistancia(distancias, visitados);
 
                 // Si no se encontro un nodo alcanzable (distancia infinita), salgo del loop
@@ -109,7 +110,7 @@ namespace Programacion3.Algoritmos
                     // Salir si el vecino ya fue visitado
                     if (visitados.Contains(vecino))
                         continue;
-                    
+
                     var arista = ObtenerArista(grafo, actual, vecino);
 
                     // Sumo el peso de la arista al valor de la distancia del nodo actual
@@ -124,12 +125,15 @@ namespace Programacion3.Algoritmos
             return distancias;
         }
 
-        private static WeightedEdge<string> ObtenerArista(UndirectedGraph<string, WeightedEdge<string>> grafo, string source, string target)
+        private static WeightedEdge<string> ObtenerArista(UndirectedGraph<string, WeightedEdge<string>> grafo,
+            string source, string target)
         {
-            return grafo.Edges.First(x => (x.Source == source && x.Target == target) || (x.Source == target && x.Target == source));
+            return grafo.Edges.First(x =>
+                (x.Source == source && x.Target == target) || (x.Source == target && x.Target == source));
         }
 
-        private static string BuscarNodoConMinimaDistancia(Dictionary<string, double> distancias, HashSet<string> visitados)
+        private static string BuscarNodoConMinimaDistancia(Dictionary<string, double> distancias,
+            HashSet<string> visitados)
         {
             var distanciaMinima = double.PositiveInfinity;
             var nodoDistanciaMinima = "";
