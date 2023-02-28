@@ -77,12 +77,12 @@ namespace Programacion3.Algoritmos
             return nodosVisitados;
         }
 
-        public static Dictionary<string, double> Dijkstra(UndirectedGraph<string, WeightedEdge<string>> grafo,
-            string nodoInicial)
+        public static Dictionary<string, double> Dijkstra(
+            BidirectionalGraph<string, TaggedEdge<string, double>> grafo, string nodoInicial)
         {
             var distancias = new Dictionary<string, double>();
             var visitados = new HashSet<string>();
-            var cantidadNodos = grafo.Vertices.ToList().Count;
+            var cantidadNodos = grafo.VertexCount;
 
             // Inicializar la distancia de todos los nodos como infinita
             foreach (var nodo in grafo.Vertices)
@@ -105,16 +105,16 @@ namespace Programacion3.Algoritmos
                 visitados.Add(actual);
 
                 // Recorrer todos los vecinos del nodo actual
-                foreach (var vecino in grafo.AdjacentVertices(actual))
+                foreach (var arista in grafo.OutEdges(actual))
                 {
+                    var vecino = arista.Target;
+
                     // Salir si el vecino ya fue visitado
                     if (visitados.Contains(vecino))
                         continue;
-
-                    var arista = ObtenerArista(grafo, actual, vecino);
-
+                    
                     // Sumo el peso de la arista al valor de la distancia del nodo actual
-                    var nuevaDistancia = distancias[actual] + arista.Weight;
+                    var nuevaDistancia = distancias[actual] + arista.Tag;
 
                     // Si la nueva distancia es menor a la que estaba guardada, la reemplazo por la nueva distancia
                     if (nuevaDistancia < distancias[vecino])
@@ -123,13 +123,6 @@ namespace Programacion3.Algoritmos
             }
 
             return distancias;
-        }
-
-        private static WeightedEdge<string> ObtenerArista(UndirectedGraph<string, WeightedEdge<string>> grafo,
-            string source, string target)
-        {
-            return grafo.Edges.First(x =>
-                (x.Source == source && x.Target == target) || (x.Source == target && x.Target == source));
         }
 
         private static string BuscarNodoConMinimaDistancia(Dictionary<string, double> distancias,

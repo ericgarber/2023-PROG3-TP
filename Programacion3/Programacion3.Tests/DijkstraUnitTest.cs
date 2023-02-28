@@ -10,17 +10,17 @@ namespace Programacion3.Tests
         [Fact]
         public void Dijkstra_1()
         {
-            var grafo = new UndirectedGraph<string, WeightedEdge<string>>();
+            var grafo = new BidirectionalGraph<string, TaggedEdge<string, double>>();
 
             grafo.AddVertexRange(new[] { "Start", "A", "B", "Finish" });
 
             grafo.AddEdgeRange(new[]
             {
-                new WeightedEdge<string>("Start", "A", 6),
-                new WeightedEdge<string>("Start", "B", 2),
-                new WeightedEdge<string>("A", "Finish", 1),
-                new WeightedEdge<string>("B", "Finish", 5),
-                new WeightedEdge<string>("B", "A", 3),
+                new TaggedEdge<string, double>("Start", "A", 6),
+                new TaggedEdge<string, double>("Start", "B", 2),
+                new TaggedEdge<string, double>("A", "Finish", 1),
+                new TaggedEdge<string, double>("B", "Finish", 5),
+                new TaggedEdge<string, double>("B", "A", 3),
             });
 
             var distancias = AlgoritmosUtils.Dijkstra(grafo, "Start");
@@ -36,37 +36,34 @@ namespace Programacion3.Tests
         [Fact]
         public void Dijkstra_2()
         {
-            var grafo = new UndirectedGraph<string, WeightedEdge<string>>();
+            var grafo = new BidirectionalGraph<string, TaggedEdge<string, double>>();
 
-            grafo.AddVertexRange(new[] { "A", "B", "C", "D", "E", "F", "G", "H" });
+            grafo.AddVertexRange(new[] { "A", "B", "C", "D", "E", "F" });
 
             grafo.AddEdgeRange(new[]
             {
-                new WeightedEdge<string>("A", "C", 1),
-                new WeightedEdge<string>("A", "B", 3),
-                new WeightedEdge<string>("C", "F", 5),
-                new WeightedEdge<string>("C", "D", 2),
-                new WeightedEdge<string>("B", "D", 1),
-                new WeightedEdge<string>("B", "G", 5),
-                new WeightedEdge<string>("F", "H", 3),
-                new WeightedEdge<string>("F", "D", 2),
-                new WeightedEdge<string>("D", "E", 4),
-                new WeightedEdge<string>("E", "H", 1),
-                new WeightedEdge<string>("G", "E", 2),
+                new TaggedEdge<string, double>("A", "C", 40),
+                new TaggedEdge<string, double>("A", "E", 10),
+                new TaggedEdge<string, double>("A", "F", 5),
+                new TaggedEdge<string, double>("B", "D", 5),
+                new TaggedEdge<string, double>("C", "B", 10),
+                new TaggedEdge<string, double>("C", "E", 5),
+                new TaggedEdge<string, double>("D", "C", 5),
+                new TaggedEdge<string, double>("E", "D", 20),
+                new TaggedEdge<string, double>("F", "E", 10),
+                new TaggedEdge<string, double>("F", "B", 20),
             });
 
             var distancias = AlgoritmosUtils.Dijkstra(grafo, "A");
 
-            Assert.Equal(8, distancias.Count);
+            Assert.Equal(6, distancias.Count);
 
             Assert.Equal(0, distancias["A"]);
-            Assert.Equal(3, distancias["B"]);
-            Assert.Equal(1, distancias["C"]);
-            Assert.Equal(3, distancias["D"]);
-            Assert.Equal(7, distancias["E"]);
+            Assert.Equal(25, distancias["B"]);
+            Assert.Equal(35, distancias["C"]);
+            Assert.Equal(30, distancias["D"]);
+            Assert.Equal(10, distancias["E"]);
             Assert.Equal(5, distancias["F"]);
-            Assert.Equal(8, distancias["G"]);
-            Assert.Equal(8, distancias["H"]);
         }
     }
 }
