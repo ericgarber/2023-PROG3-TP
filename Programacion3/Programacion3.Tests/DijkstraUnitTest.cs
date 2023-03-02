@@ -23,7 +23,7 @@ namespace Programacion3.Tests
                 new TaggedEdge<string, double>("B", "A", 3),
             });
 
-            var distancias = AlgoritmosUtils.Dijkstra(grafo, "Start");
+            var (distancias, padres) = AlgoritmosUtils.Dijkstra(grafo, "Start");
 
             Assert.Equal(4, distancias.Count);
 
@@ -31,6 +31,12 @@ namespace Programacion3.Tests
             Assert.Equal(5, distancias["A"]);
             Assert.Equal(2, distancias["B"]);
             Assert.Equal(6, distancias["Finish"]);
+            
+            Assert.Equal(3, padres.Count);
+
+            Assert.Equal("B", padres["A"]);
+            Assert.Equal("Start", padres["B"]);
+            Assert.Equal("A", padres["Finish"]);
         }
 
         [Fact]
@@ -54,7 +60,7 @@ namespace Programacion3.Tests
                 new TaggedEdge<string, double>("F", "B", 20),
             });
 
-            var distancias = AlgoritmosUtils.Dijkstra(grafo, "A");
+            var (distancias, padres) = AlgoritmosUtils.Dijkstra(grafo, "A");
 
             Assert.Equal(6, distancias.Count);
 
@@ -64,6 +70,14 @@ namespace Programacion3.Tests
             Assert.Equal(30, distancias["D"]);
             Assert.Equal(10, distancias["E"]);
             Assert.Equal(5, distancias["F"]);
+            
+            Assert.Equal(5, padres.Count);
+
+            Assert.Equal("D", padres["C"]);
+            Assert.Equal("A", padres["E"]);
+            Assert.Equal("A", padres["F"]);
+            Assert.Equal("F", padres["B"]);
+            Assert.Equal("E", padres["D"]);
         }
     }
 }

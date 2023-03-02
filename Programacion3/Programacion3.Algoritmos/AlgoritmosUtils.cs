@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Programacion3.Algoritmos.Utils;
 using QuikGraph;
 
 namespace Programacion3.Algoritmos
@@ -77,10 +76,12 @@ namespace Programacion3.Algoritmos
             return nodosVisitados;
         }
 
-        public static Dictionary<string, double> Dijkstra(
-            BidirectionalGraph<string, TaggedEdge<string, double>> grafo, string nodoInicial)
+        public static (Dictionary<string, double> distancias, Dictionary<string, string> padres)
+            Dijkstra(BidirectionalGraph<string, TaggedEdge<string, double>> grafo, string nodoInicial)
         {
             var distancias = new Dictionary<string, double>();
+            var padres = new Dictionary<string, string>();
+            
             var visitados = new HashSet<string>();
             var cantidadNodos = grafo.VertexCount;
 
@@ -116,13 +117,16 @@ namespace Programacion3.Algoritmos
                     // Sumo el peso de la arista al valor de la distancia del nodo actual
                     var nuevaDistancia = distancias[actual] + arista.Tag;
 
-                    // Si la nueva distancia es menor a la que estaba guardada, la reemplazo por la nueva distancia
+                    // Si la nueva distancia es menor a la que estaba guardada, la reemplazo por la nueva distancia y guardo el padre
                     if (nuevaDistancia < distancias[vecino])
+                    {
                         distancias[vecino] = nuevaDistancia;
+                        padres[vecino] = actual;
+                    }
                 }
             }
 
-            return distancias;
+            return (distancias, padres);
         }
 
         private static string BuscarNodoConMinimaDistancia(Dictionary<string, double> distancias,
